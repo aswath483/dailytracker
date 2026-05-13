@@ -192,7 +192,7 @@ export default function Feed() {
   const name = userData?.displayName || user?.displayName || 'there';
 
   return (
-    <div className="min-h-screen bg-slate-100 pb-24">
+    <div className="min-h-screen bg-slate-100" style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))' }}>
       {/* Premium header */}
       <div className="bg-gradient-to-r from-violet-600 to-pink-500 px-5 pt-12 pb-10">
         <p className="text-violet-200 text-sm font-semibold">{format(new Date(), 'EEEE, MMMM d')}</p>

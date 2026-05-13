@@ -84,7 +84,7 @@ export default function Profile() {
         <p className="text-violet-200 text-sm mt-0.5 font-medium">Your stats & settings</p>
       </div>
 
-      <div className="px-4 -mt-10 space-y-4">
+      <div className="px-4 -mt-10 space-y-4" style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))' }}>
 
         {/* Avatar card */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100/80 p-5">

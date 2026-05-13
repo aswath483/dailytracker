@@ -118,7 +118,7 @@ export default function Progress() {
         <p className="text-violet-200 text-sm mt-0.5 font-medium">Last 7 days</p>
       </div>
 
-      <div className="px-4 -mt-5 space-y-4">
+      <div className="px-4 -mt-5 space-y-4" style={{ paddingBottom: 'calc(5rem + env(safe-area-inset-bottom))' }}>
 
         {/* Weekly goal */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100/80 p-5">
