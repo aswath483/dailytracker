@@ -8,7 +8,7 @@
 }
 
 body {
-  background-color: #f8fafc;
+  background-color: #f1f5f9;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overscroll-behavior: none;
 }
@@ -16,4 +16,51 @@ body {
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
+}
+
+input[type='range'] {
+  accent-color: #7c3aed;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes floatUp {
+  0%   { transform: translateY(0)     scale(1);   opacity: 1; }
+  100% { transform: translateY(-80vh) scale(1.4); opacity: 0; }
+}
+
+@keyframes popIn {
+  0%   { transform: scale(0.7); opacity: 0; }
+  70%  { transform: scale(1.08); }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.fade-slide-up {
+  animation: fadeSlideUp 0.35s ease-out both;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #e2e8f0 25%, #f8fafc 50%, #e2e8f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.pop-in {
+  animation: popIn 0.25s ease-out both;
+}
+
+.float-up {
+  animation: floatUp 1.8s ease-out forwards;
+  pointer-events: none;
+  position: fixed;
+  font-size: 2rem;
+  z-index: 9999;
 }

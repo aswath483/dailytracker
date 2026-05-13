@@ -39,16 +39,19 @@ export function AuthProvider({ children }) {
     const cred = await createUserWithEmailAndPassword(auth, email, password);
     await updateProfile(cred.user, { displayName: name });
     const color = USER_COLORS[Math.floor(Math.random() * USER_COLORS.length)];
-    const data = { displayName: name, email, uid: cred.user.uid, color };
+    const data = { displayName: name, email, uid: cred.user.uid, color, weeklyGoalMinutes: 150 };
     await setDoc(doc(db, 'users', cred.user.uid), data);
     setUserData(data);
   }
 
-  const login = (email, password) => DEMO_MODE ? Promise.resolve() : signInWithEmailAndPassword(auth, email, password);
-  const logout = () => DEMO_MODE ? Promise.resolve() : signOut(auth);
+  const login = (email, password) =>
+    DEMO_MODE ? Promise.resolve() : signInWithEmailAndPassword(auth, email, password);
+
+  const logout = () =>
+    DEMO_MODE ? Promise.resolve() : signOut(auth);
 
   return (
-    <AuthContext.Provider value={{ user, userData, login, signup, logout, loading }}>
+    <AuthContext.Provider value={{ user, userData, setUserData, login, signup, logout, loading }}>
       {!loading && children}
     </AuthContext.Provider>
   );
