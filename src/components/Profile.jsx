@@ -63,18 +63,24 @@ export default function Profile() {
 
   async function handleSave() {
     setSaving(true);
-    if (!DEMO_MODE) {
-      await updateDoc(doc(db, 'users', user.uid), {
-        displayName: name,
-        color: selectedColor,
-        weeklyGoalMinutes: weeklyGoal,
-      });
-      await updateProfile(user, { displayName: name });
+    try {
+      if (!DEMO_MODE) {
+        await updateDoc(doc(db, 'users', user.uid), {
+          displayName: name,
+          color: selectedColor,
+          weeklyGoalMinutes: weeklyGoal,
+        });
+        await updateProfile(user, { displayName: name });
+      }
+      setUserData(prev => ({ ...prev, displayName: name, color: selectedColor, weeklyGoalMinutes: weeklyGoal }));
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      console.error('Save error:', err);
+      alert('Failed to save. Please try again.');
+    } finally {
+      setSaving(false);
     }
-    setUserData(prev => ({ ...prev, displayName: name, color: selectedColor, weeklyGoalMinutes: weeklyGoal }));
-    setSaving(false);
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
   }
 
   return (
