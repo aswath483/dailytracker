@@ -21,9 +21,11 @@ const ACHIEVEMENTS = [
 export default function Profile() {
   const { user, userData, setUserData, logout } = useAuth();
 
-  const [name,          setName]          = useState(userData?.displayName || '');
-  const [weeklyGoal,    setWeeklyGoal]    = useState(userData?.weeklyGoalMinutes || 150);
-  const [selectedColor, setSelectedColor] = useState(userData?.color || '#7c3aed');
+  const [name,           setName]           = useState(userData?.displayName || '');
+  const [weeklyGoal,     setWeeklyGoal]     = useState(userData?.weeklyGoalMinutes || 150);
+  const [dailyWaterGoal, setDailyWaterGoal] = useState(userData?.dailyWaterGoal || 8);
+  const [dailySleepGoal, setDailySleepGoal] = useState(userData?.dailySleepGoal || 8);
+  const [selectedColor,  setSelectedColor]  = useState(userData?.color || '#7c3aed');
   const [saving,        setSaving]        = useState(false);
   const [saved,         setSaved]         = useState(false);
   const [myEntries,     setMyEntries]     = useState([]);
@@ -69,12 +71,14 @@ export default function Profile() {
           displayName: name,
           color: selectedColor,
           weeklyGoalMinutes: weeklyGoal,
+          dailyWaterGoal,
+          dailySleepGoal,
           uid: user.uid,
           email: user.email,
         }, { merge: true });
         await updateProfile(user, { displayName: name });
       }
-      setUserData(prev => ({ ...prev, displayName: name, color: selectedColor, weeklyGoalMinutes: weeklyGoal }));
+      setUserData(prev => ({ ...prev, displayName: name, color: selectedColor, weeklyGoalMinutes: weeklyGoal, dailyWaterGoal, dailySleepGoal }));
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
@@ -154,16 +158,20 @@ export default function Profile() {
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">
             Weekly Exercise Goal — <span className="text-violet-600">{weeklyGoal} min</span>
           </label>
-          <input
-            type="range"
-            min={30} max={600} step={15}
-            value={weeklyGoal}
-            onChange={e => setWeeklyGoal(Number(e.target.value))}
-            className="w-full mt-2 mb-1"
-          />
-          <div className="flex justify-between text-xs text-gray-400 font-medium mb-4">
-            <span>30 min</span><span>600 min</span>
-          </div>
+          <input type="range" min={30} max={600} step={15} value={weeklyGoal} onChange={e => setWeeklyGoal(Number(e.target.value))} className="w-full mt-2 mb-1" />
+          <div className="flex justify-between text-xs text-gray-400 font-medium mb-4"><span>30 min</span><span>600 min</span></div>
+
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+            Daily Water Goal — <span className="text-blue-500">{dailyWaterGoal} glasses</span>
+          </label>
+          <input type="range" min={1} max={16} step={1} value={dailyWaterGoal} onChange={e => setDailyWaterGoal(Number(e.target.value))} className="w-full mt-2 mb-1" />
+          <div className="flex justify-between text-xs text-gray-400 font-medium mb-4"><span>1</span><span>16 glasses</span></div>
+
+          <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">
+            Daily Sleep Goal — <span className="text-indigo-500">{dailySleepGoal} hours</span>
+          </label>
+          <input type="range" min={4} max={12} step={0.5} value={dailySleepGoal} onChange={e => setDailySleepGoal(Number(e.target.value))} className="w-full mt-2 mb-1" />
+          <div className="flex justify-between text-xs text-gray-400 font-medium mb-4"><span>4h</span><span>12h</span></div>
 
           <button
             onClick={handleSave}
