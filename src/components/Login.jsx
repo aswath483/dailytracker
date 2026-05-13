@@ -31,8 +31,12 @@ export default function Login() {
         setError('This email is already registered. Sign in instead.');
       } else if (msg.includes('weak-password')) {
         setError('Password must be at least 6 characters.');
+      } else if (msg.includes('operation-not-allowed')) {
+        setError('Email sign-up is not enabled in Firebase. Go to Firebase Console → Authentication → Sign-in method → Enable Email/Password.');
+      } else if (msg.includes('network-request-failed')) {
+        setError('Network error. Check your internet connection.');
       } else {
-        setError('Something went wrong. Try again.');
+        setError(err.message || 'Something went wrong. Try again.');
       }
     }
     setLoading(false);
