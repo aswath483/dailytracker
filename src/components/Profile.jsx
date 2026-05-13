@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthContext';
 import { db } from '../firebase';
-import { doc, updateDoc, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { doc, setDoc, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
 import { format, subDays } from 'date-fns';
 import { DEMO_MODE, MOCK_ALL_ENTRIES } from '../mockData';
@@ -65,11 +65,13 @@ export default function Profile() {
     setSaving(true);
     try {
       if (!DEMO_MODE) {
-        await updateDoc(doc(db, 'users', user.uid), {
+        await setDoc(doc(db, 'users', user.uid), {
           displayName: name,
           color: selectedColor,
           weeklyGoalMinutes: weeklyGoal,
-        });
+          uid: user.uid,
+          email: user.email,
+        }, { merge: true });
         await updateProfile(user, { displayName: name });
       }
       setUserData(prev => ({ ...prev, displayName: name, color: selectedColor, weeklyGoalMinutes: weeklyGoal }));
