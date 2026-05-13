@@ -11,6 +11,12 @@ body {
   background-color: #f1f5f9;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overscroll-behavior: none;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+nav {
+  padding-bottom: env(safe-area-inset-bottom);
+  height: calc(4rem + env(safe-area-inset-bottom));
 }
 
 input[type='number']::-webkit-inner-spin-button,
