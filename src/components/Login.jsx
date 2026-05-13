@@ -24,6 +24,7 @@ export default function Login() {
       }
       navigate('/');
     } catch (err) {
+      console.error('Firebase error:', err.code, err.message);
       const msg = err.message || '';
       if (msg.includes('user-not-found') || msg.includes('wrong-password') || msg.includes('invalid-credential')) {
         setError('Wrong email or password.');
