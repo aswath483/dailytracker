@@ -50,14 +50,14 @@ function ReactionBar({ entry, myUid, onReact }) {
 function DailyChecklist({ entries, myUid, userData }) {
   const mine = entries.filter(e => e.userId === myUid);
   const hasExercise = mine.some(e => e.type === 'exercise');
-  const waterDrank  = mine.filter(e => e.type === 'water').reduce((s, e) => s + (e.glasses || 0), 0);
+  const waterDrank  = mine.filter(e => e.type === 'water').reduce((s, e) => s + (e.litres ?? e.glasses ?? 0), 0);
   const sleptHours  = mine.filter(e => e.type === 'sleep').reduce((s, e) => s + (e.hours || 0), 0);
   const waterGoal   = userData?.dailyWaterGoal || 8;
   const sleepGoal   = userData?.dailySleepGoal || 8;
 
   const items = [
     { emoji: '💪', label: 'Exercise', done: hasExercise,                  detail: hasExercise ? 'Done!' : 'Not yet' },
-    { emoji: '💧', label: 'Water',    done: waterDrank >= waterGoal,       detail: `${waterDrank}/${waterGoal} glasses` },
+    { emoji: '💧', label: 'Water',    done: waterDrank >= waterGoal,       detail: `${waterDrank}/${waterGoal}L` },
     { emoji: '😴', label: 'Sleep',    done: sleptHours >= sleepGoal,       detail: sleptHours > 0 ? `${sleptHours}/${sleepGoal}h` : 'Not logged' },
   ];
 
@@ -155,7 +155,7 @@ function EntryCard({ entry, isMe, myUid, onReact, onDelete, index }) {
               {entry.moodNote && <p className="text-gray-500 text-xs mt-1.5">{entry.moodNote}</p>}
             </div>
           )}
-          {entry.type === 'water'  && <div className="flex items-center gap-2"><span className="text-2xl">💧</span><span className="text-2xl font-black text-blue-600">{entry.glasses}</span><span className="text-blue-400 font-semibold text-sm">glasses of water</span></div>}
+          {entry.type === 'water'  && <div className="flex items-center gap-2"><span className="text-2xl">💧</span><span className="text-2xl font-black text-blue-600">{entry.litres ?? entry.glasses}</span><span className="text-blue-400 font-semibold text-sm">{entry.litres != null ? 'litres' : 'glasses'}</span></div>}
           {entry.type === 'sleep'  && <div className="flex items-center gap-2"><span className="text-2xl">😴</span><span className="text-2xl font-black text-indigo-600">{entry.hours}</span><span className="text-indigo-400 font-semibold text-sm">hours sleep</span></div>}
           {entry.type === 'weight' && <div className="flex items-center gap-2"><span className="text-2xl">⚖️</span><span className="text-2xl font-black text-rose-600">{entry.weight}</span><span className="text-rose-400 font-semibold text-sm">{entry.unit || 'kg'}</span></div>}
 

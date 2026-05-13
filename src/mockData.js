@@ -30,7 +30,7 @@ export const MOCK_FEED_ENTRIES = [
   { id: 'm2', userId: 'mock-user-2', userName: 'Her',  userColor: '#db2777', type: 'exercise', exerciseType: 'yoga',    minutes: 30, date: today, createdAt: makeTime(120), reactions: {} },
   { id: 'm3', userId: 'mock-user-2', userName: 'Her',  userColor: '#db2777', type: 'mood',     moodLevel: 5, moodNote: 'Best morning ever!', date: today, createdAt: makeTime(90),  reactions: { 'mock-user-1': '❤️' } },
   { id: 'm4', userId: 'mock-user-1', userName: 'You',  userColor: '#7c3aed', type: 'note',     text: 'Meal prepped for the whole week!', isPrivate: false, date: today, createdAt: makeTime(60),  reactions: {} },
-  { id: 'm5', userId: 'mock-user-1', userName: 'You',  userColor: '#7c3aed', type: 'water',    glasses: 6,  date: today, createdAt: makeTime(30),  reactions: {} },
+  { id: 'm5', userId: 'mock-user-1', userName: 'You',  userColor: '#7c3aed', type: 'water',    litres: 1.5, date: today, createdAt: makeTime(30),  reactions: {} },
   { id: 'm6', userId: 'mock-user-2', userName: 'Her',  userColor: '#db2777', type: 'nudge',    date: today, createdAt: makeTime(10),  reactions: {} },
   { id: 'm7', userId: 'mock-user-1', userName: 'You',  userColor: '#7c3aed', type: 'sleep',    hours: 7.5,  date: today, createdAt: makeTime(5),   reactions: {} },
 ];

@@ -66,7 +66,7 @@ export default function AddEntry() {
   const [moodLevel, setMoodLevel] = useState(null);
   const [moodNote, setMoodNote]   = useState('');
   const [hours, setHours]         = useState(7);
-  const [glasses, setGlasses]     = useState(4);
+  const [litres,  setLitres]       = useState(1.5);
   const [weight, setWeight]       = useState('');
   const [weightUnit, setUnit]     = useState('kg');
   const [loading, setLoading]     = useState(false);
@@ -109,7 +109,7 @@ export default function AddEntry() {
     else if (tab === 'note')   payload = { ...payload, text: note.trim(), isPrivate };
     else if (tab === 'mood')   payload = { ...payload, moodLevel, moodNote: moodNote.trim() };
     else if (tab === 'sleep')  payload = { ...payload, hours };
-    else if (tab === 'water')  payload = { ...payload, glasses };
+    else if (tab === 'water')  payload = { ...payload, litres };
     else if (tab === 'weight') payload = { ...payload, weight: parseFloat(weight), unit: weightUnit };
 
     if (!DEMO_MODE) await addDoc(collection(db, 'entries'), payload);
@@ -235,18 +235,18 @@ export default function AddEntry() {
             {/* WATER */}
             {tab === 'water' && (
               <div>
-                <p className="text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-3">Glasses of water</p>
+                <p className="text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-3">Water intake</p>
                 <div className="flex items-center bg-slate-50 rounded-2xl border-2 border-gray-100 px-4 py-4 gap-4">
-                  <button type="button" onClick={() => setGlasses(g => Math.max(1, g - 1))} className="w-11 h-11 rounded-full bg-white border border-gray-200 text-gray-600 text-xl font-bold flex items-center justify-center shadow-sm active:scale-90">−</button>
+                  <button type="button" onClick={() => setLitres(l => Math.max(0.25, parseFloat((l - 0.25).toFixed(2))))} className="w-11 h-11 rounded-full bg-white border border-gray-200 text-gray-600 text-xl font-bold flex items-center justify-center shadow-sm active:scale-90">−</button>
                   <div className="flex-1 flex flex-col items-center">
-                    <span className="text-4xl font-black text-blue-600">{glasses}</span>
-                    <span className="text-blue-400 font-bold text-xs uppercase tracking-wide">glasses 💧</span>
+                    <span className="text-4xl font-black text-blue-600">{litres}</span>
+                    <span className="text-blue-400 font-bold text-xs uppercase tracking-wide">litres 💧</span>
                   </div>
-                  <button type="button" onClick={() => setGlasses(g => Math.min(20, g + 1))} className="w-11 h-11 rounded-full bg-blue-500 text-white text-xl font-bold flex items-center justify-center shadow-sm active:scale-90">+</button>
+                  <button type="button" onClick={() => setLitres(l => Math.min(5, parseFloat((l + 0.25).toFixed(2))))} className="w-11 h-11 rounded-full bg-blue-500 text-white text-xl font-bold flex items-center justify-center shadow-sm active:scale-90">+</button>
                 </div>
                 <div className="flex gap-2 mt-2.5 flex-wrap">
-                  {[2,4,6,8,10].map(g => (
-                    <button key={g} type="button" onClick={() => setGlasses(g)} className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all active:scale-95 ${glasses===g?'bg-blue-500 text-white shadow-sm':'bg-slate-100 text-gray-500'}`}>{g}</button>
+                  {[0.5, 1, 1.5, 2, 2.5, 3].map(l => (
+                    <button key={l} type="button" onClick={() => setLitres(l)} className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all active:scale-95 ${litres===l?'bg-blue-500 text-white shadow-sm':'bg-slate-100 text-gray-500'}`}>{l}L</button>
                   ))}
                 </div>
               </div>

@@ -162,10 +162,10 @@ export default function Profile() {
           <div className="flex justify-between text-xs text-gray-400 font-medium mb-4"><span>30 min</span><span>600 min</span></div>
 
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">
-            Daily Water Goal — <span className="text-blue-500">{dailyWaterGoal} glasses</span>
+            Daily Water Goal — <span className="text-blue-500">{dailyWaterGoal} litres</span>
           </label>
-          <input type="range" min={1} max={16} step={1} value={dailyWaterGoal} onChange={e => setDailyWaterGoal(Number(e.target.value))} className="w-full mt-2 mb-1" />
-          <div className="flex justify-between text-xs text-gray-400 font-medium mb-4"><span>1</span><span>16 glasses</span></div>
+          <input type="range" min={0.5} max={5} step={0.25} value={dailyWaterGoal} onChange={e => setDailyWaterGoal(Number(e.target.value))} className="w-full mt-2 mb-1" />
+          <div className="flex justify-between text-xs text-gray-400 font-medium mb-4"><span>0.5L</span><span>5L</span></div>
 
           <label className="text-xs font-bold text-gray-500 uppercase tracking-wide">
             Daily Sleep Goal — <span className="text-indigo-500">{dailySleepGoal} hours</span>
