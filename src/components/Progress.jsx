@@ -68,6 +68,64 @@ function WeightChart({ weightEntries, color }) {
   );
 }
 
+const MOOD_EMOJI_MAP = ['','😞','😕','😐','😊','🤩'];
+
+function WeekBars({ last7Str, values, goal, barColor, unit }) {
+  const maxVal = Math.max(...values, goal || 1, 1);
+  const H = 72;
+  return (
+    <div>
+      <div className="flex items-end gap-1.5 mb-1" style={{ height: H + 20 }}>
+        {values.map((val, i) => {
+          const h = val > 0 ? Math.max((val / maxVal) * H, 4) : 0;
+          const met = goal > 0 && val >= goal && val > 0;
+          return (
+            <div key={i} className="flex-1 flex flex-col items-center justify-end gap-0.5">
+              {val > 0 && <span className="font-semibold text-gray-500 leading-none" style={{ fontSize: 9 }}>{val}</span>}
+              <div className="w-full rounded-t-xl transition-all duration-700"
+                style={{ height: h, backgroundColor: met ? barColor : `${barColor}70` }} />
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex justify-between text-xs text-gray-400 font-medium">
+        {last7Str.map(d => <span key={d}>{DAYS_SHORT[new Date(d + 'T00:00:00').getDay()]}</span>)}
+      </div>
+      {goal > 0 && <p className="text-xs text-gray-400 mt-1.5">Goal: {goal} {unit}/day · brighter = goal met</p>}
+    </div>
+  );
+}
+
+function MoodWeekSection({ last7Str, moodData }) {
+  return (
+    <div className="space-y-4">
+      {moodData.map(({ uid, name, color, days }) => (
+        <div key={uid}>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center text-white font-black flex-shrink-0"
+              style={{ fontSize: 10, backgroundColor: color }}>
+              {name[0].toUpperCase()}
+            </div>
+            <span className="text-xs font-bold text-gray-600">{name}</span>
+          </div>
+          <div className="flex gap-1">
+            {days.map((level, i) => (
+              <div key={i} className="flex-1 flex flex-col items-center gap-0.5">
+                <span style={{ fontSize: level !== null ? 22 : 16, opacity: level !== null ? 1 : 0.15 }}>
+                  {level !== null ? MOOD_EMOJI_MAP[level] : '·'}
+                </span>
+                <span className="text-gray-400 font-medium" style={{ fontSize: 9 }}>
+                  {DAYS_SHORT[new Date(last7Str[i] + 'T00:00:00').getDay()]}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function Progress() {
   const { user, userData } = useAuth();
   const [entries,     setEntries]     = useState([]);
@@ -135,6 +193,27 @@ export default function Progress() {
   const myWeekMins  = weekMins[user?.uid] || 0;
   const myWeightEntries = entries.filter(e=>e.userId===user?.uid&&e.type==='weight');
   const unlockedAch = ACHIEVEMENTS.filter(a=>a.check(myEntries,myStreak,myTotal));
+
+  const waterGoal = userData?.dailyWaterGoal || 2;
+  const sleepGoal = userData?.dailySleepGoal || 8;
+  const myWaterByDay = last7Str.map(d =>
+    +entries.filter(e => e.userId === user?.uid && e.type === 'water' && e.date === d)
+      .reduce((s, e) => s + (e.litres ?? e.glasses ?? 0), 0).toFixed(1)
+  );
+  const mySleepByDay = last7Str.map(d =>
+    entries.filter(e => e.userId === user?.uid && e.type === 'sleep' && e.date === d)
+      .reduce((s, e) => s + (e.hours || 0), 0)
+  );
+  const moodEntries = entries.filter(e => e.type === 'mood');
+  const moodData = [...new Set(moodEntries.map(e => e.userId))].filter(Boolean).map(uid => ({
+    uid,
+    name: usersMap[uid]?.name || (uid === user?.uid ? 'You' : 'Partner'),
+    color: usersMap[uid]?.color || '#7c3aed',
+    days: last7Str.map(d => {
+      const ms = moodEntries.filter(e => e.userId === uid && e.date === d);
+      return ms.length ? ms[ms.length - 1].moodLevel : null;
+    })
+  }));
 
   // Weekly recap
   const exerciseDays = (uid) => last7Str.filter(d => weekEx.some(e=>e.userId===uid&&e.date===d)).length;
@@ -255,6 +334,30 @@ export default function Progress() {
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100/80 p-5">
             <p className="text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-4">⚖️ Weight Trend</p>
             <WeightChart weightEntries={myWeightEntries} color={userData?.color||'#7c3aed'} />
+          </div>
+        )}
+
+        {/* Water this week */}
+        {!loading && (
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100/80 p-5">
+            <p className="text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-4">💧 Water This Week</p>
+            <WeekBars last7Str={last7Str} values={myWaterByDay} goal={waterGoal} barColor="#3b82f6" unit="L" />
+          </div>
+        )}
+
+        {/* Sleep this week */}
+        {!loading && (
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100/80 p-5">
+            <p className="text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-4">😴 Sleep This Week</p>
+            <WeekBars last7Str={last7Str} values={mySleepByDay} goal={sleepGoal} barColor="#6366f1" unit="h" />
+          </div>
+        )}
+
+        {/* Mood this week */}
+        {!loading && moodData.length > 0 && (
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100/80 p-5">
+            <p className="text-xs font-extrabold text-gray-400 uppercase tracking-widest mb-4">😊 Mood This Week</p>
+            <MoodWeekSection last7Str={last7Str} moodData={moodData} />
           </div>
         )}
 
